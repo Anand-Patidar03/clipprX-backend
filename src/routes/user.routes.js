@@ -1,9 +1,21 @@
-import {Router}  from "express";
-import { loginUser, registerUser ,logoutUser ,refreshAccessToken} from "../controllers/user.controllers.js";
+import { Router } from "express";
+import {
+  loginUser,
+  registerUser,
+  logoutUser,
+  refreshAccessToken,
+  chageCurrentPassword,
+  getCurrentUser,
+  updateAccountDetail,
+  updateAvatar,
+  updateCoverImage,
+  getUserChannelProfile,
+  getWatchHistory,
+} from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
-const router = Router()
+const router = Router();
 
 // router.route("/register").post(
 //     upload.fields([
@@ -26,7 +38,7 @@ router.route("/register").post(
   },
   upload.fields([
     { name: "avatar", maxCount: 1 },
-    { name: "coverImage", maxCount: 1 }
+    { name: "coverImage", maxCount: 1 },
   ]),
   (req, res, next) => {
     console.log("After multer, files:", req.files);
@@ -35,11 +47,24 @@ router.route("/register").post(
   registerUser
 );
 
-router.route("/login").post(loginUser)
+router.route("/login").post(loginUser);
 
-router.route("/logout").post(verifyJWT,logoutUser)
+router.route("/logout").post(verifyJWT, logoutUser);
 
-router.route("/refresh_token").post(refreshAccessToken)
+router.route("/refresh_token").post(refreshAccessToken);
 
+router.route("/change-password").post(verifyJWT, chageCurrentPassword);
 
-export default router
+router.route("/current-user").post(verifyJWT,getCurrentUser);
+
+router.route("/account-detail").patch(verifyJWT,updateAccountDetail);
+
+router.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateAvatar)
+
+router.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateCoverImage)
+
+router.route("/channel/:username").post(verifyJWT,getUserChannelProfile);
+
+router.route("/watch-history").post(verifyJWT,getWatchHistory);
+
+export default router;
