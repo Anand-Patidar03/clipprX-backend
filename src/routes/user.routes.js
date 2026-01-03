@@ -51,20 +51,20 @@ router.route("/login").post(loginUser);
 
 router.route("/logout").post(verifyJWT, logoutUser);
 
-router.route("/refresh_token").post(refreshAccessToken);
+router.route("/refresh_token").post(verifyJWT,refreshAccessToken);
 
 router.route("/change-password").post(verifyJWT, chageCurrentPassword);
 
-router.route("/current-user").post(verifyJWT,getCurrentUser);
+router.route("/current-user").post(verifyJWT, getCurrentUser);
 
-router.route("/account-detail").patch(verifyJWT,updateAccountDetail);
+router.route("/account-detail").patch(verifyJWT, updateAccountDetail);
 
-router.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateAvatar)
+router.route("/avatar").patch(verifyJWT, upload.single("avatar"), updateAvatar);
 
-router.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateCoverImage)
+router.route("/cover-image").patch(verifyJWT, upload.single("coverImage"), updateCoverImage);
 
-router.route("/channel/:username").post(verifyJWT,getUserChannelProfile);
+router.route("/channel/:username").post(verifyJWT, getUserChannelProfile);
 
-router.route("/watch-history").post(verifyJWT,getWatchHistory);
+router.route("/watch-history").post(verifyJWT, getWatchHistory);
 
 export default router;
