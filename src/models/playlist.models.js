@@ -1,4 +1,4 @@
-import mongoose from " mongoose";
+import mongoose from "mongoose";
 
 const playlistSchema = new mongoose.Schema(
   {
@@ -10,13 +10,13 @@ const playlistSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    owner: {
+    owner: { 
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       require: true,
     },
     videos: [
-      {
+      { 
         type: mongoose.Schema.Types.ObjectId,
         ref: "Video",
       },

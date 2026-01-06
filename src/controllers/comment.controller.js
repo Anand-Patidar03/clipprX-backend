@@ -18,7 +18,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
   if (!video) {
     throw new ApiError(400, "Incorrect video Id ");
-  }
+  } 
 
   const comment =  Comment.aggregate([
     {

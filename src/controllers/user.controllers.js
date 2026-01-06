@@ -91,7 +91,7 @@ console.log("Cover Cloudinary response :", coverImage);
     throw new ApiError(400, "Avatar upload failed");
   }
 
-  const user = await User.create({
+  const user = await User.create({ 
     fullName,
     avatar: avatar.secure_url,
     coverImage: coverImage?.secure_url || "",
