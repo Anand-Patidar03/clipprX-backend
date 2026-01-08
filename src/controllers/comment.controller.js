@@ -6,7 +6,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { Video } from "../models/video.models.js";
 
 const getVideoComments = asyncHandler(async (req, res) => {
-  //TODO: get all comments for a video
   const { videoId } = req.params;
   const { page = 1, limit = 10 } = req.query;
 
@@ -18,15 +17,15 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
   if (!video) {
     throw new ApiError(400, "Incorrect video Id ");
-  } 
+  }
 
-  const comment =  Comment.aggregate([
+  const comment = Comment.aggregate([
     {
       $match: {
         video: new mongoose.Types.ObjectId(videoId),
       },
     },
-    { 
+    {
       $lookup: {
         from: "users",
         localField: "owner",
@@ -60,13 +59,10 @@ const getVideoComments = asyncHandler(async (req, res) => {
 });
 
 const addComment = asyncHandler(async (req, res) => {
-  // TODO: add a comment to a video
-
   const { videoId } = req.params;
   const content = req.body.content;
 
   console.log("REQ.USER =>", req.user);
-
 
   if (!mongoose.Types.ObjectId.isValid(videoId)) {
     throw new ApiError(400, "Invalid video ID");
@@ -94,8 +90,6 @@ const addComment = asyncHandler(async (req, res) => {
 });
 
 const updateComment = asyncHandler(async (req, res) => {
-  // TODO: update a comment
-
   const { commentId } = req.params;
   const newContent = req.body.content;
 
@@ -123,32 +117,22 @@ const updateComment = asyncHandler(async (req, res) => {
 });
 
 const deleteComment = asyncHandler(async (req, res) => {
-  // TODO: delete a comment
-
-  const {commentId} = req.params
-  if(!mongoose.Types.ObjectId.isValid(commentId))
-  {
-    throw new ApiError(400,"Comment Id is not valid")
+  const { commentId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(commentId)) {
+    throw new ApiError(400, "Comment Id is not valid");
   }
 
-  const cmtId = await Comment.findById(commentId)
+  const cmtId = await Comment.findById(commentId);
 
-  if(cmtId.owner.toString() !== req.user?._id.toString())
-  {
-    throw new ApiError(400,"owner mismatched")
+  if (cmtId.owner.toString() !== req.user?._id.toString()) {
+    throw new ApiError(400, "owner mismatched");
   }
 
   const deleteComment = await cmtId.deleteOne();
 
-
-  return res 
+  return res
     .status(200)
-    .json(new ApiResponse(
-        200,
-        deleteComment,
-        "Comment deleted successfully"
-    ))
-
+    .json(new ApiResponse(200, deleteComment, "Comment deleted successfully"));
 });
 
 export { getVideoComments, addComment, updateComment, deleteComment };

@@ -8,7 +8,6 @@ import { Video } from "../models/video.models.js";
 
 const createPlaylist = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
-  //TODO: create playlist
 
   if (!name?.trim()) {
     throw new ApiError(400, "name of playlist is missing");
@@ -31,7 +30,6 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  //TODO: get user playlists
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     throw new ApiError(400, "userId is incorrect");
@@ -48,7 +46,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
     .populate("owner", "username fullName");
 
   return res
-    .status(200) 
+    .status(200)
     .json(
       new ApiResponse(200, playlist, "All User Playlist fetched successfully")
     );
@@ -56,7 +54,6 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 
 const getPlaylistById = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
-  //TODO: get playlist by id
 
   if (!mongoose.Types.ObjectId.isValid(playlistId)) {
     throw new ApiError(400, "playlistId is incorrect");
@@ -114,7 +111,6 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   const { playlistId, videoId } = req.params;
-  // TODO: remove video from playlist
 
   if (!mongoose.Types.ObjectId.isValid(playlistId)) {
     throw new ApiError(400, "playlist Id is incorrect");
@@ -152,7 +148,6 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
 
 const deletePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
-  // TODO: delete playlist
 
   if (!mongoose.Types.ObjectId.isValid(playlistId)) {
     throw new ApiError(400, "playlist Id is incorrect");
@@ -178,7 +173,6 @@ const deletePlaylist = asyncHandler(async (req, res) => {
 const updatePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   const { name, description } = req.body;
-  //TODO: update playlist
 
   if (!mongoose.Types.ObjectId.isValid(playlistId)) {
     throw new ApiError(400, "playlist Id is incorrect");
