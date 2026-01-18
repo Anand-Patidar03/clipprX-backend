@@ -208,9 +208,6 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     }
   ]);
 
-  // Transform to match frontend expectation (array of likes containing video object) is already handled by structure, 
-  // but let's check frontend. Frontend expects: res.data.data.map(item => item.video) usually.
-  // The current structure returns [{ video: { ... } }, { video: { ... } }] which matches the previous structure.
 
   return res
     .status(200)

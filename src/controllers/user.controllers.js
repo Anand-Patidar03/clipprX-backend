@@ -557,7 +557,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       },
     },
     {
-      $unwind: "$watchHistory", // Unwind to process each video in order
+      $unwind: "$watchHistory", 
     },
     {
       $lookup: {

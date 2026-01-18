@@ -14,14 +14,14 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
   const pipeline = [];
 
-  // 1. Match: Published videos only & optional filtering by specific User ID
+  
   const matchStage = { isPublished: true };
   if (userId) {
     matchStage.owner = new mongoose.Types.ObjectId(userId);
   }
   pipeline.push({ $match: matchStage });
 
-  // 2. Lookup: Get Owner Details
+ 
   pipeline.push({
     $lookup: {
       from: "users",
@@ -32,7 +32,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
   });
   pipeline.push({ $unwind: "$owner" });
 
-  // Lookup Likes for Count
+ 
   pipeline.push({
     $lookup: {
       from: "likes",
@@ -48,7 +48,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     }
   });
 
-  // 3. Match: Search Query (Title, Description, OR Username)
+ 
   if (query) {
     pipeline.push({
       $match: {
@@ -61,7 +61,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     });
   }
 
-  // 4. Project: Select Fields
+ 
   pipeline.push({
     $project: {
       title: 1,
@@ -78,7 +78,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     },
   });
 
-  // 5. Sort
+  
   pipeline.push({
     $sort: {
       [sortBy || "createdAt"]: sortType === "asc" ? 1 : -1,
@@ -230,7 +230,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
   const video = videos[0];
 
-  // Add to watch history if user is logged in (Move to top of history)
+ 
   if (req.user?._id) {
     await User.findByIdAndUpdate(req.user._id, {
       $pull: { watchHistory: videoId }
@@ -268,12 +268,12 @@ const updateVideo = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Title or description or thumbnail is required");
   }
 
-  // Permission check
+ 
   if (video.owner?._id.toString() !== req.user?._id.toString()) {
     throw new ApiError(400, "Video owner mismatched");
   }
 
-  // 1. Update Thumbnail if provided
+
   if (thumbnailImgPath) {
     const oldPublicId = video.thumbnail.split("/").pop().split(".")[0];
     await deleteFromCloudinary(oldPublicId);
@@ -284,7 +284,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     video.thumbnail = newThumbUpload.secure_url;
   }
 
-  // 2. Update Text Fields
+  
   if (title && title.trim() !== "") {
     video.title = title;
   }
@@ -374,8 +374,7 @@ const incrementView = asyncHandler(async (req, res) => {
   video.views += 1;
   await video.save({ validateBeforeSave: false });
 
-  // Add to watch history if user is logged in
-  // Add to watch history if user is logged in (Move to top)
+ 
   if (req.user?._id) {
     await User.findByIdAndUpdate(req.user._id, {
       $pull: { watchHistory: videoId },
